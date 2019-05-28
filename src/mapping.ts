@@ -9,17 +9,21 @@ import { Claim } from "../generated/schema"
 
 export function handleClaimSubmitted(event: ClaimSubmittedEvent): void {
   let claims = ShortNameClaims.bind(event.address)
-  let claimId = claims.computeClaimId(event.params.claimed, event.params.dnsname).toHexString()
-  let entity = new Claim(claimId)
+  let claimId = claims.computeClaimId(event.params.claimed, event.params.dnsname)
+  let entity = new Claim(claimId.toHexString())
 
   entity.name = event.params.claimed
   entity.dnsName = decodeDNSName(event.params.dnsname)
   entity.paid = event.params.paid
+  entity.owner = claims.claims(claimId).value1
+  entity.approved = false
   entity.save()
 }
 
 export function handleClaimApproved(event: ClaimApprovedEvent): void {
-  store.remove('Claim', event.params.claimId.toHexString())
+  let claim = Claim.load(event.params.claimId.toHexString())
+  claim.approved = true
+  claim.save()
 }
 
 export function handleClaimDeclined(event: ClaimDeclinedEvent): void {

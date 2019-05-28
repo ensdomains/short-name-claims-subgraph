@@ -3,4 +3,6 @@ type Claim @entity {
   name: String!
   dnsName: String!
   paid: BigInt!
+  owner: Bytes!
+  approved: Boolean!
 }
