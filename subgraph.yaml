@@ -1,0 +1,32 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Contract
+    network: ropsten
+    source:
+      address: "0xd5be10a138550bd8b53b986af2e45901f377e2bb"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - ClaimSubmitted
+        - ClaimApproved
+        - ClaimDeclined
+        - OwnershipTransferred
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: ClaimSubmitted(string,bytes,uint256)
+          handler: handleClaimSubmitted
+        - event: ClaimApproved(bytes32)
+          handler: handleClaimApproved
+        - event: ClaimDeclined(bytes32)
+          handler: handleClaimDeclined
+        - event: OwnershipTransferred(address,address)
+          handler: handleOwnershipTransferred
+      file: ./src/mapping.ts
