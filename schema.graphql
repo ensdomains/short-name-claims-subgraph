@@ -1,22 +1,6 @@
-type ClaimSubmitted @entity {
+type Claim @entity {
   id: ID!
-  claimed: String! # string
-  dnsname: Bytes! # bytes
-  paid: BigInt! # uint256
-}
-
-type ClaimApproved @entity {
-  id: ID!
-  claimId: Bytes! # bytes32
-}
-
-type ClaimDeclined @entity {
-  id: ID!
-  claimId: Bytes! # bytes32
-}
-
-type OwnershipTransferred @entity {
-  id: ID!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  name: String!
+  dnsName: String!
+  paid: BigInt!
 }

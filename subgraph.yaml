@@ -16,7 +16,6 @@ dataSources:
         - ClaimSubmitted
         - ClaimApproved
         - ClaimDeclined
-        - OwnershipTransferred
       abis:
         - name: Contract
           file: ./abis/Contract.json
@@ -27,6 +26,4 @@ dataSources:
           handler: handleClaimApproved
         - event: ClaimDeclined(bytes32)
           handler: handleClaimDeclined
-        - event: OwnershipTransferred(address,address)
-          handler: handleOwnershipTransferred
       file: ./src/mapping.ts

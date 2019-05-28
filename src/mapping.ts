@@ -1,49 +1,43 @@
+import { store, ByteArray } from '@graphprotocol/graph-ts'
 import {
   ClaimSubmitted as ClaimSubmittedEvent,
   ClaimApproved as ClaimApprovedEvent,
   ClaimDeclined as ClaimDeclinedEvent,
-  OwnershipTransferred as OwnershipTransferredEvent
+  Contract as ShortNameClaims,
 } from "../generated/Contract/Contract"
-import {
-  ClaimSubmitted,
-  ClaimApproved,
-  ClaimDeclined,
-  OwnershipTransferred
-} from "../generated/schema"
+import { Claim } from "../generated/schema"
 
 export function handleClaimSubmitted(event: ClaimSubmittedEvent): void {
-  let entity = new ClaimSubmitted(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.claimed = event.params.claimed
-  entity.dnsname = event.params.dnsname
+  let claims = ShortNameClaims.bind(event.address)
+  let claimId = claims.computeClaimId(event.params.claimed, event.params.dnsname).toHexString()
+  let entity = new Claim(claimId)
+
+  entity.name = event.params.claimed
+  entity.dnsName = decodeDNSName(event.params.dnsname)
   entity.paid = event.params.paid
   entity.save()
 }
 
 export function handleClaimApproved(event: ClaimApprovedEvent): void {
-  let entity = new ClaimApproved(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.claimId = event.params.claimId
-  entity.save()
+  store.remove('Claim', event.params.claimId.toHexString())
 }
 
 export function handleClaimDeclined(event: ClaimDeclinedEvent): void {
-  let entity = new ClaimDeclined(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.claimId = event.params.claimId
-  entity.save()
+  store.remove('Claim', event.params.claimId.toHexString())
 }
 
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-  entity.save()
+function decodeDNSName(val: ByteArray): string {
+  let parts = new Array<string>()
+  let offset = 0
+  while(true) {
+    let len = val[offset]
+    if(len == 0) break;
+    let decoded = ''
+    for(var i = offset + 1; i < offset + len + 1; i++) {
+      decoded = decoded + String.fromCharCode(val[i])
+    }
+    offset += len + 1
+    parts.push(decoded)
+  }
+  return parts.join('.')
 }

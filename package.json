@@ -4,13 +4,14 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ensdomains/short-name-claims-subgraph",
-    "create-local": "graph create --node http://localhost:8020/ ensdomains/short-name-claims-subgraph",
-    "remove-local": "graph remove --node http://localhost:8020/ ensdomains/short-name-claims-subgraph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ensdomains/short-name-claims-subgraph"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ensdomains/shortNameClaims",
+    "create-local": "graph create --node http://localhost:8020/ ensdomains/shortNameClaims",
+    "remove-local": "graph remove --node http://localhost:8020/ ensdomains/shortNameClaims",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ensdomains/shortNameClaims"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.12.0",
-    "@graphprotocol/graph-ts": "0.11.0"
+    "@graphprotocol/graph-ts": "0.11.0",
+    "dns-packet": "^5.2.1"
   }
 }
