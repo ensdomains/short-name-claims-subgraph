@@ -17,12 +17,14 @@ export function handleClaimSubmitted(event: ClaimSubmittedEvent): void {
   entity.paid = event.params.paid
   entity.owner = claims.claims(claimId).value1
   entity.approved = false
+  entity.submittedAt = event.block.timestamp
   entity.save()
 }
 
 export function handleClaimApproved(event: ClaimApprovedEvent): void {
   let claim = Claim.load(event.params.claimId.toHexString())
   claim.approved = true
+  claim.approvedAt = event.block.timestamp
   claim.save()
 }
 
