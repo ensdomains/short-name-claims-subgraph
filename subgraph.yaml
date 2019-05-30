@@ -6,7 +6,7 @@ dataSources:
     name: Contract
     network: ropsten
     source:
-      address: "0xd5be10a138550bd8b53b986af2e45901f377e2bb"
+      address: "0x0b74a518f10d6daf90c0c1aeabec2ffe851ccfa5"
       abi: Contract
     mapping:
       kind: ethereum/events
@@ -20,7 +20,7 @@ dataSources:
         - name: Contract
           file: ./abis/Contract.json
       eventHandlers:
-        - event: ClaimSubmitted(string,bytes,uint256)
+        - event: ClaimSubmitted(string,bytes,uint256,address)
           handler: handleClaimSubmitted
         - event: ClaimApproved(bytes32)
           handler: handleClaimApproved
