@@ -1,35 +1,37 @@
 import { store, ByteArray } from '@graphprotocol/graph-ts'
 import {
   ClaimSubmitted as ClaimSubmittedEvent,
-  ClaimApproved as ClaimApprovedEvent,
-  ClaimDeclined as ClaimDeclinedEvent,
+  ClaimStatusChanged as ClaimStatusChangedEvent,
   Contract as ShortNameClaims,
 } from "../generated/Contract/Contract"
 import { Claim } from "../generated/schema"
 
+var ENUM_MAP = new Map<number,string>()
+ENUM_MAP.set(0, 'PENDING')
+ENUM_MAP.set(1, 'APPROVED')
+ENUM_MAP.set(2, 'DECLINED')
+ENUM_MAP.set(3, 'WITHDRAWN')
+
 export function handleClaimSubmitted(event: ClaimSubmittedEvent): void {
   let claims = ShortNameClaims.bind(event.address)
-  let claimId = claims.computeClaimId(event.params.claimed, event.params.dnsname, event.params.claimant)
+  let claimId = claims.computeClaimId(event.params.claimed, event.params.dnsname, event.params.claimant, event.params.email)
   let entity = new Claim(claimId.toHexString())
 
   entity.name = event.params.claimed
+  entity.email = event.params.email
   entity.dnsName = decodeDNSName(event.params.dnsname)
   entity.paid = event.params.paid
   entity.owner = event.params.claimant
-  entity.approved = false
+  entity.status = 'PENDING'
   entity.submittedAt = event.block.timestamp
   entity.save()
 }
 
-export function handleClaimApproved(event: ClaimApprovedEvent): void {
+export function handleClaimStatusChanged(event: ClaimStatusChangedEvent): void {
   let claim = Claim.load(event.params.claimId.toHexString())
-  claim.approved = true
-  claim.approvedAt = event.block.timestamp
+  claim.status = ENUM_MAP.get(event.params.status)
+  claim.processedAt = event.block.timestamp
   claim.save()
-}
-
-export function handleClaimDeclined(event: ClaimDeclinedEvent): void {
-  store.remove('Claim', event.params.claimId.toHexString())
 }
 
 function decodeDNSName(val: ByteArray): string {

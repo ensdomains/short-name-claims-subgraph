@@ -10,8 +10,7 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ensdomains/shortNameClaims"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.12.0",
-    "@graphprotocol/graph-ts": "0.11.0",
-    "dns-packet": "^5.2.1"
+    "@graphprotocol/graph-cli": "^0.13.3",
+    "@graphprotocol/graph-ts": "^0.13.0"
   }
 }

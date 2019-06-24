@@ -1,10 +1,18 @@
+enum Status {
+  PENDING,
+  APPROVED,
+  DECLINED,
+  WITHDRAWN,
+}
+
 type Claim @entity {
   id: ID!
   name: String!
+  email: String!
   dnsName: String!
   paid: BigInt!
   owner: Bytes!
-  approved: Boolean!
+  status: Status!
   submittedAt: BigInt!
-  approvedAt: BigInt
+  processedAt: BigInt
 }

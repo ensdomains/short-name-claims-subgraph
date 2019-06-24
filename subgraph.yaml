@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.3
 schema:
   file: ./schema.graphql
 dataSources:
@@ -6,11 +6,11 @@ dataSources:
     name: Contract
     network: ropsten
     source:
-      address: "0x0b74a518f10d6daf90c0c1aeabec2ffe851ccfa5"
+      address: "0x178dc714ac0121577d025a0cf4dcd396f4f08ec3"
       abi: Contract
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       entities:
         - ClaimSubmitted
@@ -20,10 +20,8 @@ dataSources:
         - name: Contract
           file: ./abis/Contract.json
       eventHandlers:
-        - event: ClaimSubmitted(string,bytes,uint256,address)
+        - event: ClaimSubmitted(string,bytes,uint256,address,string)
           handler: handleClaimSubmitted
-        - event: ClaimApproved(bytes32)
-          handler: handleClaimApproved
-        - event: ClaimDeclined(bytes32)
-          handler: handleClaimDeclined
+        - event: ClaimStatusChanged(indexed bytes32,uint8)
+          handler: handleClaimStatusChanged
       file: ./src/mapping.ts

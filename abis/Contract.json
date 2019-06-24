@@ -1,13 +1,8 @@
 [
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "claimId",
-				"type": "bytes32"
-			}
-		],
-		"name": "approveClaim",
+		"inputs": [],
+		"name": "closeClaims",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -15,13 +10,17 @@
 	},
 	{
 		"constant": false,
-		"inputs": [
-			{
-				"name": "claimId",
-				"type": "bytes32"
-			}
-		],
-		"name": "declineClaim",
+		"inputs": [],
+		"name": "destroy",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "ratifyClaims",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -40,12 +39,80 @@
 		"constant": false,
 		"inputs": [
 			{
+				"name": "claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "resolveClaim",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "claimIds",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "resolveClaims",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			},
+			{
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setClaimStatus",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "approved",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "declined",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "setClaimStatuses",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
 				"name": "name",
 				"type": "bytes"
 			},
 			{
 				"name": "claimant",
 				"type": "address"
+			},
+			{
+				"name": "email",
+				"type": "string"
 			}
 		],
 		"name": "submitCombinedClaim",
@@ -64,6 +131,10 @@
 			{
 				"name": "claimant",
 				"type": "address"
+			},
+			{
+				"name": "email",
+				"type": "string"
 			}
 		],
 		"name": "submitExactClaim",
@@ -82,6 +153,10 @@
 			{
 				"name": "claimant",
 				"type": "address"
+			},
+			{
+				"name": "email",
+				"type": "string"
 			}
 		],
 		"name": "submitPrefixClaim",
@@ -105,6 +180,20 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "claimId",
+				"type": "bytes32"
+			}
+		],
+		"name": "withdrawClaim",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"name": "_priceOracle",
@@ -112,6 +201,10 @@
 			},
 			{
 				"name": "_registrar",
+				"type": "address"
+			},
+			{
+				"name": "_ratifier",
 				"type": "address"
 			}
 		],
@@ -141,6 +234,11 @@
 				"indexed": false,
 				"name": "claimant",
 				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "email",
+				"type": "string"
 			}
 		],
 		"name": "ClaimSubmitted",
@@ -153,21 +251,14 @@
 				"indexed": true,
 				"name": "claimId",
 				"type": "bytes32"
-			}
-		],
-		"name": "ClaimApproved",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
+			},
 			{
-				"indexed": true,
-				"name": "claimId",
-				"type": "bytes32"
+				"indexed": false,
+				"name": "status",
+				"type": "uint8"
 			}
 		],
-		"name": "ClaimDeclined",
+		"name": "ClaimStatusChanged",
 		"type": "event"
 	},
 	{
@@ -186,20 +277,6 @@
 		],
 		"name": "OwnershipTransferred",
 		"type": "event"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "claimCount",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"constant": true,
@@ -222,6 +299,10 @@
 			{
 				"name": "paid",
 				"type": "uint256"
+			},
+			{
+				"name": "status",
+				"type": "uint8"
 			}
 		],
 		"payable": false,
@@ -242,6 +323,10 @@
 			{
 				"name": "claimant",
 				"type": "address"
+			},
+			{
+				"name": "email",
+				"type": "string"
 			}
 		],
 		"name": "computeClaimId",
@@ -305,7 +390,49 @@
 	{
 		"constant": true,
 		"inputs": [],
+		"name": "pendingClaims",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "phase",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
 		"name": "priceOracle",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "ratifier",
 		"outputs": [
 			{
 				"name": "",
@@ -334,6 +461,20 @@
 		"constant": true,
 		"inputs": [],
 		"name": "REGISTRATION_PERIOD",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "unresolvedClaims",
 		"outputs": [
 			{
 				"name": "",
